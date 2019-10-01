@@ -8,7 +8,7 @@ const registerValidation = (data) => {
         lname: Joi.string().required(), 
         email: Joi.string().min(6).required().email(),
         password01: Joi.string().min(6).required(),
-        password02: Joi.string().min(6).required().equal(data.password01)
+        password02: Joi.string().min(6).required()
     }; 
     return Joi.validate(data, schema);
 }; 

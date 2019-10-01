@@ -33,8 +33,8 @@ public class SignupActivity extends AppCompatActivity {
         findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView textFName = findViewById(R.id.editTextFirstName);
-                TextView textLName = findViewById(R.id.editTextLastName);
+                final TextView textFName = findViewById(R.id.editTextFirstName);
+                final TextView textLName = findViewById(R.id.editTextLastName);
                 TextView textEmail = findViewById(R.id.txtEmail);
                 TextView textPassword = findViewById(R.id.txtPassword);
                 TextView textPassword02 = findViewById(R.id.editTextPassword02);
@@ -85,12 +85,25 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, "succsss login", Toast.LENGTH_LONG).show();
                                 }
                             });
-                        }else{
+                        }else if (response.code() ==  401){
                             final String mMessage = response.body().string();
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(SignupActivity.this, mMessage, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                        else{
+                            final String mMessage = response.body().string();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(mMessage.contains("fName")){
+                                        textFName.setError("Please enter a first name");
+                                    }else if(mMessage.contains("lName")){
+                                        textLName.setError("Please enter a last name");
+                                    }
                                 }
                             });
                         }
