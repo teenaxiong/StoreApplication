@@ -77,7 +77,7 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String mMessage = response.body().string();
-                        Log.e("SUCCESS", mMessage);
+                        if(reponse)
                     }
                 });
             }
