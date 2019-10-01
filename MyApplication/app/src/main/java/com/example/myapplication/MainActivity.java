@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextView textEmail = findViewById(R.id.txtEmail);
-                TextView textPassword = findViewById(R.id.txtPassword);
+                TextView textPassword = findViewById(R.id.editTextPassword01);
 
                 String email = textEmail.getText().toString();
                 String password = textPassword.getText().toString();

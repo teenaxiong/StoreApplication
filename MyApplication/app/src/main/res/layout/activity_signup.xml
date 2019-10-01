@@ -20,7 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextLastName" />
 
     <EditText
-        android:id="@+id/txtPassword"
+        android:id="@+id/editTextPassword01"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginStart="28dp"
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/lblEmail" />
 
     <EditText
-        android:id="@+id/textPassword02"
+        android:id="@+id/editTextPassword02"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -53,11 +53,11 @@
         android:ems="10"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        app:layout_constraintStart_toEndOf="@+id/editTextPassword02"
-        app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
+        app:layout_constraintStart_toEndOf="@+id/labelPassword02"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword01" />
 
     <TextView
-        android:id="@+id/editTextPassword02"
+        android:id="@+id/labelPassword02"
         android:layout_width="68dp"
         android:layout_height="40dp"
         android:layout_marginStart="28dp"
@@ -87,7 +87,7 @@
         android:layout_marginRight="48dp"
         android:text="@string/cancelButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword01" />
 
     <Button
         android:id="@+id/buttonRegister"
@@ -98,7 +98,7 @@
         android:layout_marginTop="83dp"
         android:text="@string/registerButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword01" />
 
     <TextView
         android:id="@+id/textViewFirstName"

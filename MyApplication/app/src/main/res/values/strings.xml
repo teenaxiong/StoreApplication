@@ -8,4 +8,5 @@
     <string name="enterFName">Enter First Name</string>
     <string name="enterLName">Enter Last Name</string>
     <string name="confirmPassword">Confirm Password</string>
+    <string name="title_activity_shopping">ShoppingActivity</string>
 </resources>
