@@ -3,9 +3,11 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -75,9 +77,23 @@ public class SignupActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String mMessage = response.body().string();
-                        if(reponse)
+                    public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                        if(response.code() == 200){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(SignupActivity.this, "succsss login", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }else{
+                            final String mMessage = response.body().string();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(SignupActivity.this, mMessage, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     }
                 });
             }
