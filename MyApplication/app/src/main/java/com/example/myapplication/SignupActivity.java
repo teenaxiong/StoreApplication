@@ -28,16 +28,21 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        findViewById(R.id.registerButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView textUserName = findViewById(R.id.txtEmail);
+                TextView textFName = findViewById(R.id.editTextFirstName);
+                TextView textLName = findViewById(R.id.editTextLastName);
                 TextView textEmail = findViewById(R.id.txtEmail);
                 TextView textPassword = findViewById(R.id.txtPassword);
+                TextView textPassword02 = findViewById(R.id.editTextPassword02);
 
-                String username = textUserName.getText().toString();
+                String fName = textFName.getText().toString();
+                String lName = textLName.getText().toString();
                 String email = textEmail.getText().toString();
                 String password = textPassword.getText().toString();
+                String password02 = textPassword02.getText().toString();
+
 
                 OkHttpClient client = new OkHttpClient();
 
@@ -45,9 +50,12 @@ public class SignupActivity extends AppCompatActivity {
                 String url = "https://visualexample.herokuapp.com/api/user/register";
                 JSONObject postData = new JSONObject();
                 try {
-                    postData.put("name", username);
+                    postData.put("fname", fName);
+                    postData.put("lname", lName);
                     postData.put("email", email);
-                    postData.put("password", password);
+                    postData.put("password01", password);
+                    postData.put("password02", password02);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

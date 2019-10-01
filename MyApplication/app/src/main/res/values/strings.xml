@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="email">Email</string>
+    <string name="registerButton">Register</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="enterFName">Enter First Name</string>
+    <string name="enterLName">Enter Last Name</string>
+    <string name="confirmPassword">Confirm Password</string>
 </resources>

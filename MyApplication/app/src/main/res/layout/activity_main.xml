@@ -55,7 +55,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnSignUp"
+        android:id="@+id/buttonCancelSignup"
         android:layout_width="125dp"
         android:layout_height="42dp"
         android:layout_marginTop="83dp"
@@ -66,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
     <Button
-        android:id="@+id/btnLogIn"
+        android:id="@+id/buttonRegister"
         android:layout_width="125dp"
         android:layout_height="42dp"
         android:layout_marginStart="40dp"
