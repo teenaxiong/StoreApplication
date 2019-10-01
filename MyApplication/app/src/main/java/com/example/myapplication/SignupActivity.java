@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,39 +21,31 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_signup);
 
-
-        findViewById(R.id.btnSignUp).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.registerButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-        findViewById(R.id.btnLogIn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                TextView textUserName = findViewById(R.id.txtEmail);
                 TextView textEmail = findViewById(R.id.txtEmail);
                 TextView textPassword = findViewById(R.id.txtPassword);
 
+                String username = textUserName.getText().toString();
                 String email = textEmail.getText().toString();
                 String password = textPassword.getText().toString();
 
                 OkHttpClient client = new OkHttpClient();
 
                 MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
-                String url = "https://visualexample.herokuapp.com/api/user/login";
+                String url = "https://visualexample.herokuapp.com/api/user/register";
                 JSONObject postData = new JSONObject();
                 try {
+                    postData.put("name", username);
                     postData.put("email", email);
                     postData.put("password", password);
                 } catch (JSONException e) {
@@ -77,14 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String jwt = response.body().string();
-                        Log.e("SUCCESS", jwt);
+                        String mMessage = response.body().string();
+                        Log.e("SUCCESS", mMessage);
                     }
                 });
             }
         });
-
-
-
     }
 }
