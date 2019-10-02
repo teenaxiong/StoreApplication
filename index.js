@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 //import routes
 const authRoute = require('./routes/auth');
 const postRoute = require('./routes/post');
+const braintreeRoute = require('./routes/braintree'); 
 const gateway = require('./routes/braintree')
 mongoose.set('useUnifiedTopology', true);
 const PORT = process.env.PORT || 3000
@@ -21,6 +22,7 @@ app.use(express.json());
 
 
 //route middlerwares
+app.use('/api/braintree', braintreeRoute); 
 app.use('/api/user', authRoute); 
 app.use('/api/post', postRoute); 
 

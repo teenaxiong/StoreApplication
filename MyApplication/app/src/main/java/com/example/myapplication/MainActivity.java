@@ -92,13 +92,19 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }else if (response.code() == 200){
-                            String jwt = response.body().string();
-                            Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(MainActivity.this, ShoppingActivity.class);
-                            intent.putExtra(JWT_TOKEN, jwt);
-                            startActivity(intent);
-                            finish();
+                            final String jwt = response.body().string();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(MainActivity.this, ShoppingActivity.class);
+                                    intent.putExtra(JWT_TOKEN, jwt);
+                                    Log.d("token", jwt);
+                                    startActivity(intent);
+                                    finish();
 
+                                }
+                            });
                         }
                     }
                 });

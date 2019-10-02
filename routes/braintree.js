@@ -28,14 +28,29 @@ try {
 
 }) */
 
-//send the id that we searched from the jwt
-router.post('/registerBrainTree', authenticateToken, async (req, res) =>{
+//authenticateToken will use authenticateToken.js to decode the JWT and return back a 
+//user id in the form of req.user._id
+router.get('/registerBrainTree', authenticateToken, async (req, res) =>{
     res.json({
-        posts: {
-            title: "my first post",
-            description: "random data here"
-        }
+            userID: req.user._id
     });
+
+    const user = await User.findOne({_id: req.user._id}); 
+    if(!user) return res.status(400).send("Error. Please log in first."); 
+
+    gateway.customer.create({
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        email: req.user.email,
+        id: req.user._id
+      }, function (err, result) {
+        result.success;
+        // true
+      
+        result.customer.id;
+        // e.g. 494019
+      });
+
 })
 
 module.exports = router; 

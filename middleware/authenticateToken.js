@@ -2,16 +2,22 @@ const jwt = require('jsonwebtoken');
 
 
 function autheticateToken(req, res, next){
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    
-    if(token == null) return res.sendStatus(401)
+    const bearerHeader = req.headers['authorization']; 
 
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user =>{
-        if(err) return res.sendStatus(403)
-        req.user = user
-        next()
-    }))
+    if(typeof bearerHeader !== 'undefined'){
+        const bearer = bearerHeader.split(" ");
+        const bearerToken = bearer[1];
+
+ 
+        jwt.verify(bearerToken, process.env.TOKEN_SECRET, function(err, user){
+            if(err) return res.sendStatus(403)
+            req.user = user
+            next()
+        })
+    }else{
+        res.sendStatus(403); 
+    }
+ 
 }
 
 module.exports = autheticateToken; 
