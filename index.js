@@ -2,9 +2,12 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose'); 
 const dotenv = require('dotenv');
+
+
 //import routes
 const authRoute = require('./routes/auth');
-const postRoute = require('./routes/post')
+const postRoute = require('./routes/post');
+const gateway = require('./routes/braintree')
 mongoose.set('useUnifiedTopology', true);
 const PORT = process.env.PORT || 3000
 dotenv.config(); 

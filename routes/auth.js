@@ -30,7 +30,12 @@ router.post('/register',  async (req, res) => {
     }); 
     try{
         const savedUser = await user.save(); 
-        res.status(200).send({user: user._id}); 
+
+        //create and assigne a token
+        const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
+        res.header('auth-token', token).status(200).send(token); 
+
+      //  res.statussend({user: user._id}); 
     }catch(err){
         res.status(400).send(err); 
     }
@@ -52,8 +57,9 @@ router.post('/login', async (req, res) => {
     if(!validPass) return res.status(400).send("Invalid password.");
 
     //create and assigne a token
-    const token  = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
-    res.header('auth-token', token).send(token); 
+    const token  = jwt.sign({_id: user._id}, 
+        process.env.TOKEN_SECRET);
+    res.header('auth-token', token).status(200).send(token); 
     
 
 })

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -23,6 +24,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    static String JWT_TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +79,27 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String jwt = response.body().string();
-                        Log.e("SUCCESS", jwt);
+                    public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                        if(response.code() == 400){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Toast.makeText(MainActivity.this, response.body().string(), Toast.LENGTH_LONG).show();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }else if (response.code() == 200){
+                            String jwt = response.body().string();
+                            Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(MainActivity.this, ShoppingActivity.class);
+                            intent.putExtra(JWT_TOKEN, jwt);
+                            startActivity(intent);
+                            finish();
+
+                        }
                     }
                 });
             }

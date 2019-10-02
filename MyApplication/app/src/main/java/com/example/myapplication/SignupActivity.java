@@ -25,6 +25,7 @@ import okhttp3.Response;
 
 public class SignupActivity extends AppCompatActivity {
     String fName, lName, email, password, password02;
+    static String JWT_TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +89,13 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
                 if (response.code() == 200) {
+                    final String jwt = response.body().string();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(SignupActivity.this, "Successfully Register", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(SignupActivity.this, ShoppingActivity.class);
+                            intent.putExtra(JWT_TOKEN, jwt);
                             startActivity(intent);
                             finish();
                         }
