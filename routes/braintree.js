@@ -35,7 +35,7 @@ router.get('/registerBrainTree', authenticateToken, async (req, res) =>{
             userID: req.user._id
     });
 
-    const user = await User.findOne({_id: req.user._id}); 
+    const user = await User.findById({_id: req.user._id}); 
     if(!user) return res.status(400).send("Error. Please log in first."); 
 
     gateway.customer.create({
