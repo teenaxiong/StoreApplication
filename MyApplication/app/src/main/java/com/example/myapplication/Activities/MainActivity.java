@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.myapplication.Model.CurrentUser;
+import com.example.myapplication.Model.User;
+import com.example.myapplication.R;
+import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -23,6 +28,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+
 public class MainActivity extends AppCompatActivity {
 
     static String JWT_TOKEN;
@@ -31,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         findViewById(R.id.buttonCancelSignup).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,17 +97,20 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }else if (response.code() == 200){
-                            final String jwt = response.body().string();
+                            final String userBody = response.body().string();
+                            System.out.println(userBody);
+                            Gson gson = new Gson();
+                            final User user = gson.fromJson(userBody, User.class);
+                            System.out.println(user.getFirstName());
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(MainActivity.this, ShoppingActivity.class);
-                                    intent.putExtra(JWT_TOKEN, jwt);
-                                    Log.d("token", jwt);
+                                    Intent intent = new Intent(MainActivity.this, Shopping.class);
+                                    CurrentUser.Companion.initializeCurrentUser(MainActivity.this);
+                                    CurrentUser.Companion.writeSharedPref(user);
                                     startActivity(intent);
                                     finish();
-
                                 }
                             });
                         }

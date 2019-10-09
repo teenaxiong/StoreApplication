@@ -9,4 +9,9 @@
     <string name="enterLName">Enter Last Name</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="title_activity_shopping">ShoppingActivity</string>
+    <string name="addItem">Add Item</string>
+    <string name="keepShopping">Continue Shopping</string>
+    <string name="clearCart">Clear Cart</string>
+    <string name="checkout">Checkout</string>
 </resources>
+

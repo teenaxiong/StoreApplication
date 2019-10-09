@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 var braintree = require("braintree");
 const authenticateToken = require('../middleware/authenticateToken')
+const User = require('../model/User'); 
 
 var gateway = braintree.connect({
     environment:  braintree.Environment.Sandbox,
@@ -11,46 +12,109 @@ var gateway = braintree.connect({
 });
 
 
-/*create token for client before payment
 
-router.get("/getClientToken", auth, async (req, res)=> {
-try {
-    gateway.generate({customerId: req.user._id}, function(err, res){
-        if(result.success){
-            res.status(200).send({token: result.clientToken})
-        }else{
-            res.status(400).send({message: "something wrong"});
-        }
-    });
-} catch (error) {
-    res.status(400).send(error);
-}
+  /*THIS FUNCTION WILL PROCESS CHECKOUT
+  */
+  router.post('/checkouts', function (req, res) {
+  var transactionErrors;
+  var amount = req.body.amount; // In production you should not take amounts directly from clients
+  var nonce = req.body.payment_method_nonce;
 
-}) */
+  gateway.transaction.sale({
+    amount: amount,
+    paymentMethodNonce: nonce,
+    options: {
+      submitForSettlement: true
+    }
+  }, function (err, result) {
+    if (result.success || result.transaction) {
+      //res.redirect('checkouts/' + result.transaction.id);
+        res.send(result); 
+    } else {
+      transactionErrors = result.errors.deepErrors();
+     // req.flash('error', {msg: formatErrors(transactionErrors)});
+      //res.redirect('checkouts/new');
+      res.send(formatErrors(transactionErrors))
+    }
+  });
+});
 
 //authenticateToken will use authenticateToken.js to decode the JWT and return back a 
-//user id in the form of req.user._id
-router.get('/registerBrainTree', authenticateToken, async (req, res) =>{
-    res.json({
-            userID: req.user._id
-    });
+//user id in the form of req.user
+router.post('/customerBrainTree', authenticateToken, async (req, res) =>{
+  
+  var obj_id = new require('mongodb').ObjectID(req.user._id)//this allows us to get the mongo id
+    const user = await User.findOne({_id: obj_id}); //find if there is a user who exist with the id
+  if(!user) return res.status(400).send("Error. Please log in first."); 
 
-    const user = await User.findById({_id: req.user._id}); 
-    if(!user) return res.status(400).send("Error. Please log in first."); 
+    gateway.customer.find(req.user._id, function(err, customer){
+      if(err){//userID not found
+        createCustomer(res, user, req.user._id)
+      }else{
+        generateClientToken(res, req.user._id)
+      }
+    }); 
 
-    gateway.customer.create({
-        firstName: req.user.firstName,
-        lastName: req.user.lastName,
-        email: req.user.email,
-        id: req.user._id
-      }, function (err, result) {
-        result.success;
-        // true
-      
-        result.customer.id;
-        // e.g. 494019
-      });
-
+  
 })
+
+//start the transaction
+router.post('/transaction', function(req, res){
+  var nonceFromTheClient = req.body.paymentMethodNonce;
+  var paymentAmount = req.body.paymentAmount
+
+  gateway.transaction.sale({
+    amount: paymentAmount,
+    paymentMethodNonce: nonceFromTheClient,
+    options: {
+      submitForSettlement: true
+    }
+  }, function (err, result) {
+    if(err){
+       res.status(400).send("There was an error while completing transaction")
+      }
+    else res.status(200).send("Transaction complete")
+      
+    });
+})
+
+var generateClientToken = function(res, userId){
+  gateway.clientToken.generate({
+    customerId: userId
+  }, function (err, response){
+    if(err){
+      res.status(400)
+      res.setHeader('Content-Type', 'text/plain')
+      res.write("There was an error while getting clientToken")
+      res.send()
+    }else{
+      var clientTokenJson = {
+        'clientToken': response.clientToken
+    }      
+    res.status(200)
+      res.setHeader('Content-Type', 'application/json')
+      res.json(clientTokenJson)
+    }
+  })
+}
+
+var createCustomer = function(res, user, userId){
+  gateway.customer.create({
+    firstName: user.fname,
+    lastName: user.lname,
+    email: user.email,
+    id: userId
+  }, function (err, result) {
+    if(err){
+      res.status(400)
+      res.setHeader('Content-Type', 'text/plain')
+      res.write("There was an error while creating customer")
+      res.send()
+    }else{
+      generateClientToken(res, result)
+    }
+  });
+
+}
 
 module.exports = router; 

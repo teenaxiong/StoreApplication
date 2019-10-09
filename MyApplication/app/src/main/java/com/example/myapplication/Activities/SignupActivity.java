@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.myapplication.Model.CurrentUser;
+import com.example.myapplication.Model.User;
+import com.example.myapplication.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -94,8 +98,10 @@ public class SignupActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Toast.makeText(SignupActivity.this, "Successfully Register", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(SignupActivity.this, ShoppingActivity.class);
-                            intent.putExtra(JWT_TOKEN, jwt);
+                            Intent intent = new Intent(SignupActivity.this, Shopping.class);
+                            User user = new User(fName, lName, email, jwt);
+                            CurrentUser.Companion.initializeCurrentUser(SignupActivity.this);
+                            CurrentUser.Companion.writeSharedPref(user);
                             startActivity(intent);
                             finish();
                         }

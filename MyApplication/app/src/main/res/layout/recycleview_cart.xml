@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="160sp"
+        android:layout_height="160sp"
+        android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textColor="#2d2d2d"
+        android:textSize="13sp" />
+    <TextView
+        android:id="@+id/originalCost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#2d2d2d"
+        android:textSize="13sp"
+        android:text="Original Cost"/>
+    <TextView
+        android:id="@+id/saleCost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#2d2d2d"
+        android:textSize="13sp"
+        android:text="Sale Cost"/>
+
+</LinearLayout>
