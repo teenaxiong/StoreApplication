@@ -7,16 +7,15 @@ class CurrentUser()
 {
     companion object {
 
-        lateinit var sharedPreferences: SharedPreferences
+        private lateinit var sharedPreferences: SharedPreferences
         private var FIRST_NAME = "firstName"
         private var LAST_NAME = "lastName"
         private var EMAIL = "email"
         private var JWT = "token"
 
         fun initializeCurrentUser(context: Context) {
-            if (sharedPreferences == null) {
                 sharedPreferences = context.getSharedPreferences("currentUser", Context.MODE_PRIVATE)
-            }
+
         }
 
         fun writeSharedPref(user: User) {
@@ -26,6 +25,22 @@ class CurrentUser()
             editor.putString(EMAIL, user.email)
             editor.putString(JWT, user.jwt)
             editor.apply()
+        }
+
+        fun getFirstName() : String?{
+            return sharedPreferences.getString(FIRST_NAME, "")
+        }
+
+        fun getLastName() : String?{
+            return sharedPreferences.getString(LAST_NAME, "")
+        }
+
+        fun getEmail() : String?{
+            return sharedPreferences.getString(EMAIL, "")
+        }
+
+        fun getJWT() : String?{
+            return sharedPreferences.getString(JWT, "")
         }
     }
 }

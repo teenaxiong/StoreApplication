@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.CartActivity"></activity>
         <activity android:name=".Activities.Shopping" />
-        <activity android:name=".Activities.ShoppingActivity" />
         <activity android:name=".Activities.SignupActivity" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>

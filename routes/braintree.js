@@ -41,7 +41,7 @@ var gateway = braintree.connect({
 
 //authenticateToken will use authenticateToken.js to decode the JWT and return back a 
 //user id in the form of req.user
-router.post('/customerBrainTree', authenticateToken, async (req, res) =>{
+router.get('/customerBrainTree', authenticateToken, async (req, res) =>{
   
   var obj_id = new require('mongodb').ObjectID(req.user._id)//this allows us to get the mongo id
     const user = await User.findOne({_id: obj_id}); //find if there is a user who exist with the id
@@ -91,8 +91,7 @@ var generateClientToken = function(res, userId){
       var clientTokenJson = {
         'clientToken': response.clientToken
     }      
-    res.status(200)
-      res.setHeader('Content-Type', 'application/json')
+    res.status(200).setHeader('Content-Type', 'application/json')
       res.json(clientTokenJson)
     }
   })
