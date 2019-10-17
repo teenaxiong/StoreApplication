@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.DiscountCalculation
 import com.example.myapplication.Model.ItemPOJO
 import com.example.myapplication.R
-import com.example.myapplication.calulateDiscount
 
 class CartAdapter(val itemList: ArrayList<ItemPOJO>) : RecyclerView.Adapter <CartAdapter.ViewHolder>() {
 
@@ -38,7 +37,8 @@ class CartAdapter(val itemList: ArrayList<ItemPOJO>) : RecyclerView.Adapter <Car
             itemOrignalCost.text = "$" + item.price
             var finalPriceAfterDiscount = DiscountCalculation.calulateDiscount(item)
             if(finalPriceAfterDiscount != null){
-                itemSaleCost.text = "$"+ "%.2f".format(finalPriceAfterDiscount)
+                itemSaleCost.text = DiscountCalculation.currencyFormat(finalPriceAfterDiscount)
+                        //"$"+ "%.2f".format(finalPriceAfterDiscount)
                 itemOrignalCost.setPaintFlags(itemOrignalCost.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
             }
 

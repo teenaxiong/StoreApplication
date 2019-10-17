@@ -45,6 +45,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayoutBottomButtons"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTotalCost"
         app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/editTextTotalCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="total cost"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/linearLayoutBottomButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutRecycleView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

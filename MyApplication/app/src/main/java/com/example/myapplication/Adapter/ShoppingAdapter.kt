@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.DiscountCalculation
 import com.example.myapplication.Model.ItemPOJO
 import com.example.myapplication.R
 import java.util.concurrent.CopyOnWriteArrayList
@@ -47,7 +48,8 @@ class ShoppingAdapter (val itemList: List<ItemPOJO>, val interfaceListner: Shopp
             var finalPriceAfterDiscount = discountCalculation(item)
 
             if(finalPriceAfterDiscount != null){
-                itemSaleCost.text = "$"+ "%.2f".format(finalPriceAfterDiscount)
+                itemSaleCost.text = DiscountCalculation.currencyFormat(finalPriceAfterDiscount)
+                        //"$"+ "%.2f".format(finalPriceAfterDiscount)
                 itemOrignalCost.setPaintFlags(itemOrignalCost.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
             }
 

@@ -2,6 +2,7 @@ package com.example.myapplication.Activities
 
 import android.content.Intent
 import android.content.SharedPreferences
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -17,7 +18,6 @@ import com.example.myapplication.Model.ItemPOJO
 import com.example.myapplication.Model.ItemRoot
 import com.example.myapplication.Model.User
 import com.example.myapplication.R
-import com.example.myapplication.calulateDiscount
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_cart.*
 import okhttp3.*
@@ -30,7 +30,15 @@ import com.braintreepayments.api.dropin.DropInActivity
 import android.R.attr.data
 import com.braintreepayments.api.dropin.DropInResult
 import android.R.attr.data
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.view.View
+import android.widget.EditText
+import android.widget.TextView
+import com.example.myapplication.DiscountCalculation.Companion.currencyFormat
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 
 class CartActivity() : AppCompatActivity() {
@@ -38,6 +46,7 @@ class CartActivity() : AppCompatActivity() {
     lateinit var cart: ArrayList<ItemPOJO>
     val REQUEST_CODE = 1
     var totalCost : Double = 0.00
+    val TRANSACTION_COMPLETE : String = "COMPLETE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +59,14 @@ class CartActivity() : AppCompatActivity() {
             recyclerView.layoutManager = LinearLayoutManager(this)
             val adapter = CartAdapter(cart)
             recyclerView.adapter = adapter
+
+            for (item in cart){
+                if(DiscountCalculation.calulateDiscount(item) != null){
+                    totalCost += DiscountCalculation.calulateDiscount(item)!!
+                }
+            }
+            findViewById<TextView>(R.id.editTextTotalCost).setText("TOTAL: ${currencyFormat(totalCost)}")
+
         }else{
             Toast.makeText(this, "No items in cart yet", Toast.LENGTH_LONG).show()
             finish()
@@ -59,23 +76,10 @@ class CartActivity() : AppCompatActivity() {
             finish()
         }
 
-        clearCartButton.setOnClickListener {
-
-        }
 
         checkOutButton.setOnClickListener {
             if(cart != null){
-                for (item in cart){
-                    if(DiscountCalculation.calulateDiscount(item) != null){
-                        totalCost += DiscountCalculation.calulateDiscount(item)!!
-                    }
-                }
-
                 getToken()
-
-
-
-
             }else{
                 Toast.makeText(this, "No items in cart", Toast.LENGTH_LONG).show()
             }
@@ -111,9 +115,7 @@ class CartActivity() : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 if (response.code == 200) {
                     val clientToken = JSONObject(response.body?.string())["clientToken"].toString()
-                    println(clientToken)
-                    val dropInRequest = DropInRequest()
-                            .clientToken(clientToken)
+                    val dropInRequest = DropInRequest().clientToken(clientToken)
                     startActivityForResult(dropInRequest.getIntent(applicationContext), REQUEST_CODE)
                 } else {
                     runOnUiThread {
@@ -130,20 +132,19 @@ class CartActivity() : AppCompatActivity() {
 
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode === REQUEST_CODE) {
             if (resultCode === Activity.RESULT_OK) {
+
                 val result = data!!.getParcelableExtra<DropInResult>(DropInResult.EXTRA_DROP_IN_RESULT)
                 // use the result to update your UI and send the payment method nonce to your server
-
                 val client = OkHttpClient()
-
                 val url = "https://visualexample.herokuapp.com/api/braintree/transaction"
                 val postData = JSONObject()
                 try {
                     postData.put("paymentMethodNonce", "${result.paymentMethodNonce}")
-                    postData.put("paymentAmount", "$totalCost")
+                    postData.put("paymentAmount", "${totalCost}")
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
@@ -175,6 +176,10 @@ class CartActivity() : AppCompatActivity() {
                             runOnUiThread {
                                 try {
                                     Toast.makeText(applicationContext, response.body!!.string(), Toast.LENGTH_LONG).show()
+                                    val intent01 = Intent(applicationContext, Shopping::class.java)
+
+                                    intent01.putExtra(TRANSACTION_COMPLETE, TRANSACTION_COMPLETE)
+                                    startActivity(intent01)
                                     finish()
                                 } catch (e: IOException) {
                                     e.printStackTrace()
@@ -194,15 +199,5 @@ class CartActivity() : AppCompatActivity() {
                 println(error)
             }
         }
-    }
-
-    private fun discountCalculation(item: ItemPOJO) : Double? {
-        if(item.discount > 0) {
-            var percentageOFF = 1 - (item.discount.div(100))
-            var finalPrice = item.price.times(percentageOFF)
-            return finalPrice
-
-        }else return null
-
     }
 }

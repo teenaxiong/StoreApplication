@@ -21,7 +21,7 @@ var gateway = braintree.connect({
   var nonce = req.body.payment_method_nonce;
 
   gateway.transaction.sale({
-    amount: amount,
+    amount: 100,
     paymentMethodNonce: nonce,
     options: {
       submitForSettlement: true
@@ -73,7 +73,7 @@ router.post('/transaction', function(req, res){
     if(err){
        res.status(400).send("There was an error while completing transaction")
       }
-    else res.status(200).send("Transaction complete")
+    else if(result.success) res.status(200).send("Transaction complete")
       
     });
 })

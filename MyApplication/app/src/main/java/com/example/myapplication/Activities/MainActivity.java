@@ -38,16 +38,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //cancel signup
         findViewById(R.id.buttonCancelSignup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(MainActivity.this, SignupActivity.class);
                 startActivity(intent);
 
             }
         });
 
+        //user clicks on register
         findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,22 +61,25 @@ public class MainActivity extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
 
                 MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
-                String url = "https://visualexample.herokuapp.com/api/user/login";
+                String url = "https://visualexample.herokuapp.com/api/user/login"; //the url for our login page.
                 JSONObject postData = new JSONObject();
-                try {
+                try { //putting email and password into a json object.
                     postData.put("email", email);
                     postData.put("password", password);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                //create the requestbody, putting the jsonobject we just created into it.
                 RequestBody requestBody = RequestBody.create(postData.toString(), MEDIA_TYPE);
+                //building the request string.
                 Request request = new Request.Builder()
                         .url(url)
                         .post(requestBody)
                         .header("Content-Type", "application/json")
                         .build();
 
+                //this is where we call the api, and we get back a response.
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                        //this runs if there's an error while registering.
                         if(response.code() == 400){
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -96,12 +101,15 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                            //this runs if user was able to register.
                         }else if (response.code() == 200){
                             final String userBody = response.body().string();
-                            System.out.println(userBody);
+
                             Gson gson = new Gson();
+                            //we use gson to convert the json object into the object of the User.class
                             final User user = gson.fromJson(userBody, User.class);
-                            System.out.println(user.getFirstName());
+
+                            //runs on UI thread.
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

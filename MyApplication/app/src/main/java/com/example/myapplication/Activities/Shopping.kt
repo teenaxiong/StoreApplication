@@ -24,34 +24,50 @@ class Shopping : AppCompatActivity(), ShoppingAdapter.ShoppingAdapterInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shopping2)
 
-         cartList = ArrayList()
+        cartList = ArrayList() //create the cartlist for user
+
 
         var gson =  Gson();
         var json = loadJSONFromAsset(); //reads the file from asset and put into a string here.
-        var itemRoot = gson.fromJson(json, ItemRoot::class.java); //the string then gets put into the root, which contains the arraylist
+        var itemRoot = gson.fromJson(json, ItemRoot::class.java); //the string then gets put into the ItemRoot object, which contains the arraylist
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleView_id);
         recycleView.layoutManager = GridLayoutManager(this, 2);
         val adapter = ShoppingAdapter(itemRoot.results, this);
         recycleView.adapter = adapter;
 
+
+        //user is ready to check out.
         viewCartButton.setOnClickListener {
-            val intent = Intent(this, CartActivity::class.java)
-            intent.putExtra("cartList", cartList)
-            startActivity(intent)
+            if(cartList.isEmpty()){
+                Toast.makeText(this, "No items in cart", Toast.LENGTH_LONG).show()
+            }else {
+                val intent = Intent(this, CartActivity::class.java)
+                intent.putExtra("cartList", cartList)
+                startActivity(intent)
+            }
         }
     }
 
+    //when user clicks on ADD ITEM button for each item in the adapter, this interface function is run.
+    //adds it to the list.
     override fun addCartInterfaceFuntion(item: ItemPOJO) {
          cartList.add(item)
         Toast.makeText(this, "${item.name} is added to cart", Toast.LENGTH_LONG).show()
 
     }
 
+    //after complete transaction, the cartlist gets clear here.
+    override fun onResume() {
+        super.onResume()
+        if(intent?.getStringExtra("COMPLETE").equals("COMPLETE")){
+            cartList.clear()
+        }
+    }
 
     //read the json file.
     fun loadJSONFromAsset(): String? {
-        var json: String? = null
+        var json: String?
         try {
             val inputStream = this.assets.open("discount.json")
             val size = inputStream.available()
