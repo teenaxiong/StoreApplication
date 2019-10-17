@@ -17,11 +17,11 @@ var gateway = braintree.connect({
   */
   router.post('/checkouts', function (req, res) {
   var transactionErrors;
-  var amount = req.body.amount; // In production you should not take amounts directly from clients
+  var amountUser = req.body.amount; // In production you should not take amounts directly from clients
   var nonce = req.body.payment_method_nonce;
 
   gateway.transaction.sale({
-    amount: 100,
+    amount: amountUser,
     paymentMethodNonce: nonce,
     options: {
       submitForSettlement: true
