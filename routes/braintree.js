@@ -70,10 +70,12 @@ router.post('/transaction', function(req, res){
       submitForSettlement: true
     }
   }, function (err, result) {
-    if(err){
-       res.status(400).send("There was an error while completing transaction")
-      }
-    else if(result.success) res.status(200).send("Transaction complete")
+    if((result.success  || result.transaction)){
+      res.status(200).send("Transaction complete")
+    } 
+    else{
+      res.status(400).send("There was an error while completing transaction")
+    }
       
     });
 })
