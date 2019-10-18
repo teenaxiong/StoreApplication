@@ -13,32 +13,6 @@ var gateway = braintree.connect({
 
 
 
-  /*THIS FUNCTION WILL PROCESS CHECKOUT
-  */
-  router.post('/checkouts', function (req, res) {
-  var transactionErrors;
-  var amountUser = req.body.paymentAmount; // In production you should not take amounts directly from clients
-  var nonce = req.body.payment_method_nonce;
-
-  gateway.transaction.sale({
-    amount: amountUser,
-    paymentMethodNonce: nonce,
-    options: {
-      submitForSettlement: true
-    }
-  }, function (err, result) {
-    if (result.success || result.transaction) {
-      //res.redirect('checkouts/' + result.transaction.id);
-        res.send(result); 
-    } else {
-      transactionErrors = result.errors.deepErrors();
-     // req.flash('error', {msg: formatErrors(transactionErrors)});
-      //res.redirect('checkouts/new');
-      res.send(formatErrors(transactionErrors))
-    }
-  });
-});
-
 //authenticateToken will use authenticateToken.js to decode the JWT and return back a 
 //user id in the form of req.user
 router.get('/customerBrainTree', authenticateToken, async (req, res) =>{

@@ -143,7 +143,7 @@ class CartActivity() : AppCompatActivity() {
                 val url = "https://visualexample.herokuapp.com/api/braintree/transaction"
                 val postData = JSONObject()
                 try {
-                    postData.put("paymentMethodNonce", "${result.paymentMethodNonce}")
+                    postData.put("paymentMethodNonce", "${result.paymentMethodNonce?.nonce}")
                     postData.put("paymentAmount", "${totalCost}")
                 } catch (e: JSONException) {
                     e.printStackTrace()
