@@ -17,7 +17,7 @@ var gateway = braintree.connect({
   */
   router.post('/checkouts', function (req, res) {
   var transactionErrors;
-  var amountUser = req.body.amount; // In production you should not take amounts directly from clients
+  var amountUser = req.body.paymentAmount; // In production you should not take amounts directly from clients
   var nonce = req.body.payment_method_nonce;
 
   gateway.transaction.sale({
